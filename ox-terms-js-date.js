@@ -299,12 +299,12 @@ Date.toTermString=function(date,format)
 	return format
 		.split('%yyyy').join(date.getFullYear())
 		.split('%yy').join((date.getFullYear() + '').substring(2))
-		.split('%dddd').join(dayOfWeekNames[termObject.dayOfWeek-1])
-		.split('%ddd').join(dayOfWeekNames[termObject.dayOfWeek-1].substring(0,3))
-		.split('%ddn').join(pad(termObject.dayOfWeek))
-		.split('%dn').join(termObject.dayOfWeek)
-		.split('%ww').join(pad(termObject.weekInTerm))
-		.split('%w').join(termObject.weekInTerm)
+		.split('%EEEE').join(dayOfWeekNames[termObject.dayOfWeek-1])
+		.split('%EEE').join(dayOfWeekNames[termObject.dayOfWeek-1].substring(0,3))
+		.split('%ww').join(pad(termObject.dayOfWeek))
+		.split('%w').join(termObject.dayOfWeek)
+		.split('%tww').join(pad(termObject.weekInTerm))
+		.split('%tw').join(termObject.weekInTerm)
 		.split('%tttt').join(termObject.termName)
 		.split('%tt').join(termObject.term)
 		.split('%t').join(termObject.term.substring(0,1))
@@ -342,7 +342,7 @@ function()
 	};
 	
 	addPrototype("getDate",function(){return Date.getDateForTermObject(this);});
-	addPrototypeAttribute("termFormat","%dddd, Week %w of %tttt term %yyyy");
+	addPrototypeAttribute("termFormat","%EEEE, Week %tw of %tttt Term %yyyy");
 	OxfordTerm.prototype.toString=function(format){return Date.toTermString(this.getDate(),format || this.termFormat)};
 }
 )();
@@ -376,7 +376,7 @@ function()
 	addPrototype("hilary",function(){return Date.hilary(this.getFullYear());});
 	addPrototype("trinity",function(){return Date.trinity(this.getFullYear());});
 	addPrototype("getTerm",function(){return Date.getTermObjectForDate(this);});
-	addPrototypeAttribute("termFormat","%dddd, Week %w of %tttt term %yyyy");
+	addPrototypeAttribute("termFormat","%EEEE, Week %tw of %tttt Term %yyyy");
 	addPrototype("toTermString",function(format){return Date.toTermString(this,format || this.termFormat)});
 
 }
