@@ -241,12 +241,12 @@ Date.getTermObjectForDate=function(date_in)
     var WEEK;
 	
 	Y=date_in.getFullYear();
-     
-    MT=Date.michaelmas(Y);
-    HT=Date.hilary(Y);
-    TT=Date.trinity(Y);
     
-    if(date_in.getTime() >= Date.DATE_SUB(MT,2,"WEEK").getTime())
+	MT=Date.michaelmas(Y);
+	HT=Date.hilary(Y);
+	TT=Date.trinity(Y);
+	
+	 if(date_in.getTime() >= Date.DATE_SUB(MT,2,"WEEK").getTime())
     {
         term='MT';
 		termName='Michaelmas';
@@ -267,7 +267,16 @@ Date.getTermObjectForDate=function(date_in)
         relative=HT;
      }
 	 
-    WEEK=Math.floor((((Date.DATEDIFF(date_in,Date.DATE_SUB(relative,2,"WEEK")))-14)/7))+1;
+	if(relative)
+	{
+    	WEEK=Math.floor((((Date.DATEDIFF(date_in,Date.DATE_SUB(relative,2,"WEEK")))-14)/7))+1;
+	}
+	else
+	{
+		WEEK="";
+		termName="";
+		term="";
+	}
     
 	var termObject=new OxfordTerm({
 		year: Y,
@@ -295,10 +304,15 @@ Date.toTermString=function(date,format)
 	};
 	
 	var dayOfWeekNames=['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+	var monthOfYearNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
 	
 	return format
 		.split('%yyyy').join(date.getFullYear())
 		.split('%yy').join((date.getFullYear() + '').substring(2))
+		.split('%MMMM').join(monthOfYearNames[date.getMonth()])
+		.split('%MMM').join(monthOfYearNames[date.getMonth()].substring(0,3))
+		.split('%MM').join(pad(date.getMonth()+1))
+		.split('%M').join((date.getMonth()+1))
 		.split('%EEEE').join(dayOfWeekNames[termObject.dayOfWeek-1])
 		.split('%EEE').join(dayOfWeekNames[termObject.dayOfWeek-1].substring(0,3))
 		.split('%ww').join(pad(termObject.dayOfWeek))
@@ -308,6 +322,9 @@ Date.toTermString=function(date,format)
 		.split('%tttt').join(termObject.termName)
 		.split('%tt').join(termObject.term)
 		.split('%t').join(termObject.term.substring(0,1))
+		.split('%dd').join(pad(date.getDate()))
+		.split('%d').join(date.getDate())
+		.split('%o').join("thstndrdthththththththththththththththththstndrdthththththththst".substring(((date.getDate() % 32)*2),((date.getDate() % 32)*2)+2))
 		;
 };
 
