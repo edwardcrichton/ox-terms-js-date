@@ -34,6 +34,10 @@ Using a format pattern:
 ```
 %yyyy - full year
 %yy - last two digits of the year
+%MMMM - full name of the month e.g. January
+%MMM - shorter name of the month e.g. Jan
+%MM - two digit month of the year e.g. 01
+%M - month of the year, not zero padded e.g. 1
 %EEEE - full name of the day of the week e.g. Monday
 %EEE - shorter name of the day of the week e.g. Mon
 %ww - day of week number 1-7 (sun-sat)
@@ -43,11 +47,16 @@ Using a format pattern:
 %tttt name of the term
 %tt two letter abbreviation of the term
 %t one letter abbreviation of the term
+%dd two digit day of the month e.g. 03
+%d day of the month, not zero padded e.g. 3
+%o the ordinal of the day e.g. st nd rd th
+
 ```
 
 ```
 new Date().toTermString("%tt%yy")
 new Date().toTermString("%EEEE, Week %tw of %tttt Term %yyyy")
+new Date().toTermString("%d%o %MMMM %yyyy")
 ```
 
 Creating a date for a particular year, term, week and day:
