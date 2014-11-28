@@ -54,9 +54,9 @@ Using a format pattern:
 ```
 
 ```
-new Date().toTermString("%tt%yy")
-new Date().toTermString("%EEEE, Week %tw of %tttt Term %yyyy")
-new Date().toTermString("%d%o %MMMM %yyyy")
+new Date().toTermString("%tt%yy") // MT2015
+new Date().toTermString("%EEEE, Week %tw of %tttt Term %yyyy") // Monday, Week 1 of Michaelmas Term 2015
+new Date().toTermString("%d%o %MMMM %yyyy") // 19th January 2015
 ```
 
 Creating a date for a particular year, term, week and day:
