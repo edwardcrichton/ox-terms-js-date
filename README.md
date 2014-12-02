@@ -1,7 +1,9 @@
 ox-terms-js-date
 ================
 
-Extension to javascript Date to handle Oxford term dates and office closure dates.
+Extension to javascript Date to handle Oxford term dates and office closure dates. This also comes with some date arithmetic functions.
+
+You might find this is useful for: converting between Oxford term dates and dates; finding out which term a date is in; finding the date of a day in term time; finding out when holidays are; getting formatted date and term date strings; doing date calculations.
 
 Term date examples
 ------------------
