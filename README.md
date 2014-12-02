@@ -95,7 +95,7 @@ new Date().DATE_ADD(interval,unit);
 Date.DATE_SUB(date,interval,unit);
 new Date().DATE_SUB(interval,unit);
 ```
-where unit is one of:
+where 'unit' is one of:
 
 ```
 "MILLISECOND"
@@ -108,7 +108,7 @@ where unit is one of:
 "YEAR"
 ```
 
-and interval is the number in that unit to add or subtract.
+and 'interval' is the number in that unit to add or subtract.
 
 The absolute difference between two dates in days:
 
