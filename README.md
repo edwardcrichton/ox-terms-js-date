@@ -85,3 +85,34 @@ Easter:
 Date.easter(2015); // returns a Date for easter in 2015 
 new Date().easter(); // returns a Date for easter in the same year as the date used
 ```
+
+Date arithmetic:
+
+Add or subtract from a date. A new Date is returned.
+```
+Date.DATE_ADD(date,interval,unit);
+new Date().DATE_ADD(interval,unit);
+Date.DATE_SUB(date,interval,unit);
+new Date().DATE_SUB(interval,unit);
+```
+where unit is one of:
+
+```
+"MILLISECOND"
+"SECOND"
+"MINUTE"
+"HOUR"
+"DAY"
+"WEEK"
+"MONTH"
+"YEAR"
+```
+
+and interval is the number in that unit to add or subtract.
+
+The absolute difference between two dates in days:
+
+```
+Date.DATEDIFF(date1,date2);
+date1.DATEDIFF(date2);
+```
