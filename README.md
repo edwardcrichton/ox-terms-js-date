@@ -1,10 +1,10 @@
 ox-terms-js-date
 ================
 
-Extension to javascript Date to handle Oxford term dates.
+Extension to javascript Date to handle Oxford term dates and office closure dates.
 
-Examples
---------
+Term date examples
+------------------
 
 Getting the start of full term:
 
@@ -54,12 +54,34 @@ Using a format pattern:
 ```
 
 ```
-new Date().toTermString("%tt%yy") // MT2015
-new Date().toTermString("%EEEE, Week %tw of %tttt Term %yyyy") // Monday, Week 1 of Michaelmas Term 2015
-new Date().toTermString("%d%o %MMMM %yyyy") // 19th January 2015
+new Date().toTermString("%tt%yy"); // MT2015
+new Date().toTermString("%EEEE, Week %tw of %tttt Term %yyyy"); // Monday, Week 1 of Michaelmas Term 2015
+new Date().toTermString("%d%o %MMMM %yyyy"); // 19th January 2015
 ```
 
 Creating a date for a particular year, term, week and day:
 ```
-Date.getDateForTermWeekDay(2013,'MT',8,2) // Monday (2), week 8, Michaelmas term, 2013
+Date.getDateForTermWeekDay(2013,'MT',8,2); // Monday (2), week 8, Michaelmas term, 2013
+```
+
+Office closure dates example
+----------------------------
+
+To get an array of office closure dates:
+
+```
+Date.getHolidays(2015);
+new Date.getHolidays();
+```
+
+Added extras
+------------
+
+To make the above functions possible, the following functions have also been added to Date:
+
+Easter:
+
+```
+Date.easter(2015); // returns a Date for easter in 2015 
+new Date().easter(); // returns a Date for easter in the same year as the date used
 ```
