@@ -179,6 +179,108 @@ Date.trinity=function(Y)
 	}
 };
 
+/* returns an array of office closure holidays for a given year */
+Date.getHolidays=function(year)
+{
+	if(!year)
+		{
+			year=(new Date()).getFullYear();
+		}
+	
+		var holidays=[];
+		
+		var yearEnd=new Date(year+1, 0, 1,0,0,0,0);
+		
+		var newYear=null;
+
+		// When is new year day?
+		if(yearEnd.DAYOFWEEK()==1)
+		{
+			newYear=new Date(year+1,0,2,0,0,0,0);
+		}
+		else
+		if(yearEnd.DAYOFWEEK()==7)
+		{
+			newYear=new Date(year+1,0,3,0,0,0,0);
+		}
+		else
+		{
+			newYear=yearEnd;
+		}
+
+		// extend year end bounds to include the new year
+		if(yearEnd.getTime() < newYear.getTime())
+		{
+			yearEnd=newYear;
+		}
+
+		
+		// Easter
+
+		var easter=Date.easter(year);
+
+		holidays.push({from:easter.DATE_SUB(3,"DAY"), to: easter.DATE_ADD(2,"DAY"), holiday:"Easter"});
+
+		// May day bank
+		var firstMay=new Date(year,4,1,0,0,0,0);
+		var mayDay=null;
+
+		if(2-firstMay.DAYOFWEEK()>=0)
+		{
+			mayDay=firstMay.DATE_ADD( ( 2 - firstMay.DAYOFWEEK() ), "DAY");
+		}
+		else
+		{
+			mayDay=firstMay.DATE_ADD( ( 9 - firstMay.DAYOFWEEK() ), "DAY");
+		}
+
+		
+		holidays.push({from:mayDay, to: mayDay.DATE_ADD(1,"DAY"), holiday:"May day"});
+		
+		// Spring bank
+
+		var lastMay=new Date(year, 4, 31,0,0,0,0);
+		var springBank=null;
+
+		if(lastMay.DAYOFWEEK()>=2)
+		{
+			springBank=lastMay.DATE_ADD( ( 2 - lastMay.DAYOFWEEK() ) , "DAY");
+		}
+		else
+		{
+			springBank=lastMay.DATE_ADD( ( 2 - lastMay.DAYOFWEEK() ) - 7, "DAY" );
+		}
+
+		holidays.push({from:springBank, to: springBank.DATE_ADD(1,"DAY"), holiday:"Spring bank"});
+
+		var lastAugust=new Date(year, 7, 31,0,0,0,0);
+		var summerBank=null;
+		
+		if(lastAugust.DAYOFWEEK()>=2)
+		{
+			summerBank=lastAugust.DATE_ADD(  ( 2 - lastAugust.DAYOFWEEK() ), "DAY");
+		}
+		else
+		{
+			summerBank=lastAugust.DATE_ADD( ( 2 - lastAugust.DAYOFWEEK() ) - 7 , "DAY");
+		}
+
+		
+		holidays.push({from:summerBank, to: summerBank.DATE_ADD(1,"DAY"), holiday:"Summer bank"});
+		// calc office closed for christmas
+
+		var christmasClose=newYear.DATE_SUB(9,"DAY");
+		if(christmasClose.DAYOFWEEK()==1 || christmasClose.DAYOFWEEK()==7)
+		{
+			christmasClose=christmasClose.DATE_SUB(2,"DAY");
+		}
+
+		holidays.push({from:christmasClose, to: newYear.DATE_ADD(1,"DAY"), holiday:"Christmas"});
+		return holidays;
+}
+
+
+
 /* Translate an Oxford term date into a calendar date */
 
 /*
@@ -395,6 +497,6 @@ function()
 	addPrototype("getTerm",function(){return Date.getTermObjectForDate(this);});
 	addPrototypeAttribute("termFormat","%EEEE, Week %tw of %tttt Term %yyyy");
 	addPrototype("toTermString",function(format){return Date.toTermString(this,format || this.termFormat)});
-
+	addPrototype("getHolidays",function(){return Date.getHolidays(this.getFullYear());});
 }
 )();
