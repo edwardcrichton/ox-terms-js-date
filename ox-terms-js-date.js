@@ -279,6 +279,37 @@ Date.getHolidays=function(year)
 		return holidays;
 }
 
+/* Returns the list of weekends for a given year */
+
+Date.getWeekends=function(year)
+{
+        if(!year)
+        {
+                year=(new Date()).getFullYear();
+        }
+
+        var weekends=[];
+
+        // find the first Sunday of the year
+
+        var yearStart=new Date(year, 0, 1,0,0,0,0);
+
+        var firstSunday=null;
+
+        firstSunday=yearStart.DATE_ADD( ( 8 - yearStart.DAYOFWEEK() ), "DAY");
+
+
+        var sunday=firstSunday;
+        for(var w=0;w<52;w++)
+        {
+                if(w>0)
+                {
+                        sunday=sunday.DATE_ADD(1,"WEEK");
+                }
+                weekends.push({from:sunday.DATE_SUB(1,"DAY"), to: sunday.DATE_ADD(1,"DAY"), holiday:"Weekend"});
+        }
+        return weekends;
+}
 
 
 /* Translate an Oxford term date into a calendar date */
@@ -498,5 +529,6 @@ function()
 	addPrototypeAttribute("termFormat","%EEEE, Week %tw of %tttt Term %yyyy");
 	addPrototype("toTermString",function(format){return Date.toTermString(this,format || this.termFormat)});
 	addPrototype("getHolidays",function(){return Date.getHolidays(this.getFullYear());});
+	addPrototype("getWeekends",function(){return Date.getWeekends(this.getFullYear());});
 }
 )();
