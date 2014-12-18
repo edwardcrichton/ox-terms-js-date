@@ -76,6 +76,17 @@ Date.getHolidays(2015);
 new Date.getHolidays();
 ```
 
+Getting the list of weekends
+----------------------------
+
+To get an array of weekend dates:
+
+```
+Date.getWeekends(2015);
+new Date.getWeekends();
+```
+
+
 Added extras
 ------------
 
