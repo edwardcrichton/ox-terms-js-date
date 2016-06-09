@@ -4,7 +4,7 @@ Extends Date to handle Oxford term dates.
 
 Extends Date with:
 
-easter DATE_ADD DATE_SUB DATEDIFF DAYOFWEEK michaelmas hilary trinity getDateForTermWeekDay getDateForTermObject getTermObjectForDate toTermString 
+getDaysInMonth getLastDayOfMonth isLeapYear easter DATE_ADD DATE_SUB DATEDIFF DAYOFWEEK michaelmas hilary trinity getDateForTermWeekDay getDateForTermObject getTermObjectForDate toTermString
 
 Adds OxfordTerm prototype.
 
@@ -20,6 +20,22 @@ Get a formatted string of a term.
 */
 
 /* Utility functions */
+
+Date.getDaysInMonth=function(date)
+{
+	return Date.getLastDayOfMonth(date).getDate();
+};
+
+Date.getLastDayOfMonth=function(date)
+{
+	return new Date(date.getFullYear(), date.getMonth()+1, 0);
+};
+
+Date.isLeapYear=function(date)
+{
+	return (Date.getDaysInMonth(date) > 28);
+};
+
 Date.easter=function(Y)
 {
 	var D;
@@ -51,12 +67,12 @@ Date.easter=function(Y)
 
 Date.DATE_ADD=function(date,interval,unit)
 {
-	if (interval==null)
+	if (interval === null || interval === undefined)
 	{
 		throw "Missing interval";
 	}
 	
-	if (!unit)
+	if (unit  === null || unit  === undefined)
 	{
 		throw "Missing unit";
 	}
@@ -123,8 +139,6 @@ Date.michaelmas=function(Y)
 	
 	if(2 - Date.DAYOFWEEK(oct1) >=0)
 	{
-		var interval=2 - Date.DAYOFWEEK(oct1);
-		
 		return Date.DATE_ADD(Date.DATE_ADD( oct1, ( 2 - Date.DAYOFWEEK(oct1) ),"DAY" ), 6, "DAY");
 	}
 	else
@@ -142,8 +156,6 @@ Date.hilary=function(Y)
 	
 	if(2 - Date.DAYOFWEEK(jan7) >=0)
 	{
-		var interval=2 - Date.DAYOFWEEK(jan7);
-		
 		return Date.DATE_ADD(Date.DATE_ADD( jan7, ( 2 - Date.DAYOFWEEK(jan7) ),"DAY" ), 6, "DAY");
 	}
 	else
@@ -194,12 +206,12 @@ Date.getHolidays=function(year)
 		var newYear=null;
 
 		// When is new year day?
-		if(yearEnd.DAYOFWEEK()==1)
+		if(yearEnd.DAYOFWEEK()===1)
 		{
 			newYear=new Date(year+1,0,2,0,0,0,0);
 		}
 		else
-		if(yearEnd.DAYOFWEEK()==7)
+		if(yearEnd.DAYOFWEEK()===7)
 		{
 			newYear=new Date(year+1,0,3,0,0,0,0);
 		}
@@ -270,14 +282,14 @@ Date.getHolidays=function(year)
 		// calc office closed for christmas
 
 		var christmasClose=newYear.DATE_SUB(9,"DAY");
-		if(christmasClose.DAYOFWEEK()==1 || christmasClose.DAYOFWEEK()==7)
+		if(christmasClose.DAYOFWEEK()===1 || christmasClose.DAYOFWEEK()===7)
 		{
 			christmasClose=christmasClose.DATE_SUB(2,"DAY");
 		}
 
 		holidays.push({from:christmasClose, to: newYear.DATE_ADD(1,"DAY"), holiday:"Christmas"});
 		return holidays;
-}
+};
 
 /* Returns the list of weekends for a given year */
 
@@ -309,7 +321,7 @@ Date.getWeekends=function(year)
                 weekends.push({from:sunday.DATE_SUB(1,"DAY"), to: sunday.DATE_ADD(1,"DAY"), holiday:"Weekend"});
         }
         return weekends;
-}
+};
 
 
 /* Translate an Oxford term date into a calendar date */
@@ -322,7 +334,7 @@ Date.getWeekends=function(year)
 Date.getDateForTermWeekDay=function(year, term ,weekInTerm ,dayOfWeek)
 {
 	var termStart;
-	if(term!='MT' && term!='HT' && term !='TT')
+	if(term!=='MT' && term!=='HT' && term !=='TT')
 	{
 		throw "The term parameter must be one of: MT, HT or TT";
 	}
@@ -348,10 +360,10 @@ Date.getDateForTermObject=function(termObject)
 {
 	if(!termObject){return null;}
 	
-	if(termObject.year==null){throw "Missing year";}
-	if(termObject.term==null){throw "Missing term";}
-	if(termObject.weekInTerm==null){throw "Missing weekInTerm";}
-	if(termObject.dayOfWeek==null){throw "Missing dayOfWeek";}
+	if(termObject.year === null || termObject.year === undefined){throw "Missing year";}
+	if(termObject.term === null || termObject.term === undefined){throw "Missing term";}
+	if(termObject.weekInTerm === null || termObject.weekInTerm === undefined){throw "Missing weekInTerm";}
+	if(termObject.dayOfWeek === null || termObject.dayOfWeek === undefined){throw "Missing dayOfWeek";}
 	return Date.getDateForTermWeekDay(termObject.year, termObject.term ,termObject.weekInTerm ,termObject.dayOfWeek);
 };
 
@@ -370,7 +382,6 @@ Date.getTermObjectForDate=function(date_in)
     var term;
 	var termName;
     var relative;
-    var WEEK_DEC;
     var WEEK;
 	
 	Y=date_in.getFullYear();
@@ -425,7 +436,7 @@ Date.getTermObjectForDate=function(date_in)
 
 Date.toTermString=function(date,format)
 {
-	if(!format){throw "Missing term date format";}
+	if(!format){throw "Missing date format";}
 	
 	var termObject=Date.getTermObjectForDate(date);
 	
@@ -461,13 +472,15 @@ Date.toTermString=function(date,format)
 		;
 };
 
+Date.format=Date.toTermString;
+
 /* Create an  OxfordTerm object */
 
 function OxfordTerm(object)
 {
 	if(object)
 	{
-		for(attr in object)
+		for(var attr in object)
 		{
 			this[attr]=object[attr];
 		}
@@ -483,17 +496,17 @@ function()
 
 	function addPrototype(function_name, func)
 	{
-		if( typeof OxfordTerm.prototype[function_name] == 'undefined' ){OxfordTerm.prototype[function_name] = func;}
-	};
+		if( typeof OxfordTerm.prototype[function_name] === 'undefined' ){OxfordTerm.prototype[function_name] = func;}
+	}
 	
 	function addPrototypeAttribute(attribute_name, attribute_value)
 	{
-		if( typeof OxfordTerm.prototype[attribute_name] == 'undefined' ){OxfordTerm.prototype[attribute_name] = attribute_value;}
-	};
+		if( typeof OxfordTerm.prototype[attribute_name] === 'undefined' ){OxfordTerm.prototype[attribute_name] = attribute_value;}
+	}
 	
 	addPrototype("getDate",function(){return Date.getDateForTermObject(this);});
 	addPrototypeAttribute("termFormat","%EEEE, Week %tw of %tttt Term %yyyy");
-	OxfordTerm.prototype.toString=function(format){return Date.toTermString(this.getDate(),format || this.termFormat)};
+	OxfordTerm.prototype.toString=function(format){return Date.toTermString(this.getDate(),format || this.termFormat);};
 }
 )();
 
@@ -507,27 +520,32 @@ function()
 	
 	function addPrototype(function_name, func)
 	{
-		if( typeof Date.prototype[function_name] == 'undefined' ){Date.prototype[function_name] = func;}
-	};
+		if( typeof Date.prototype[function_name] === 'undefined' ){Date.prototype[function_name] = func;}
+	}
 	
 	function addPrototypeAttribute(attribute_name, attribute_value)
 	{
-		if( typeof Date.prototype[attribute_name] == 'undefined' ){Date.prototype[attribute_name] = attribute_value;}
-	};
+		if( typeof Date.prototype[attribute_name] === 'undefined' ){Date.prototype[attribute_name] = attribute_value;}
+	}
 	
+	addPrototype("getDaysInMonth",function(){return Date.getDaysInMonth(this);});
+	addPrototype("getLastDayOfMonth",function(){return Date.getLastDayOfMonth(this);});
+	addPrototype("isLeapYear",function(){return Date.isLeapYear(this);});
 	addPrototype("easter",function(){return Date.easter(this.getFullYear());});
 	
 	addPrototype("DATE_ADD",function(interval,unit){return Date.DATE_ADD(this,interval,unit);});
 	addPrototype("DATE_SUB",function(interval,unit){return Date.DATE_SUB(this,interval,unit);});
 	addPrototype("DATEDIFF",function(date){return Date.DATEDIFF(this,date);});
-	addPrototype("DAYOFWEEK",function(date){return Date.DAYOFWEEK(this);});
+	addPrototype("DAYOFWEEK",function(){return Date.DAYOFWEEK(this);});
 	
 	addPrototype("michaelmas",function(){return Date.michaelmas(this.getFullYear());});
 	addPrototype("hilary",function(){return Date.hilary(this.getFullYear());});
 	addPrototype("trinity",function(){return Date.trinity(this.getFullYear());});
 	addPrototype("getTerm",function(){return Date.getTermObjectForDate(this);});
 	addPrototypeAttribute("termFormat","%EEEE, Week %tw of %tttt Term %yyyy");
-	addPrototype("toTermString",function(format){return Date.toTermString(this,format || this.termFormat)});
+	addPrototypeAttribute("dateFormat","%EEE, %dd %MMM %yyyy");
+	addPrototype("toTermString",function(format){return Date.toTermString(this,format || this.termFormat);});
+	addPrototype("format",function(format){return Date.format(this,format || this.dateFormat);});
 	addPrototype("getHolidays",function(){return Date.getHolidays(this.getFullYear());});
 	addPrototype("getWeekends",function(){return Date.getWeekends(this.getFullYear());});
 }
