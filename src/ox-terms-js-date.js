@@ -592,13 +592,18 @@ Date.getTermObjectForDate = function (date_in)
 	else
 	{
 		WEEK = "";
-		termName = "";
-		term = "";
 	}
 
 	termObject.weekInTerm = WEEK;
 	termObject.dayOfWeek = Date.DAYOFWEEK(date_in);
 	termObject.date = date_in;
+	
+	if(!relative)
+	{
+		termObject.termName="";
+		termObject.term="";
+		termObject.termNumber=null;
+	}
 
 	return termObject;
 };
