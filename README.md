@@ -155,6 +155,7 @@ Date.getDateForTermObject(terms[2]);
 Creating a date for a particular year, term, week and day:
 ```
 Date.getDateForTermWeekDay(2013,'MT',8,2); // Monday (2), week 8, Michaelmas term, 2013
+```
 
 Formatting dates
 
