@@ -44,7 +44,7 @@ Date.getMichaelmasTermObject(2019);
 }
 ```
 
-All terms in an academic year:
+All terms and vacations in an academic year:
 
 ```
 Date.getTerms(academicYear);
@@ -70,7 +70,20 @@ Date.getTerms(2019);
       },
       "full": {
         "from": "2019-10-13T00:00:00.000Z",
-        "to": "2019-12-08T01:00:00.000Z"
+        "to": "2019-12-07T00:00:00.000Z"
+      }
+    }
+  },
+  {
+    "year": 2019,
+    "academicYear": 2019,
+    "termNumber": 1.5,
+    "term": "CV",
+    "termName": "Christmas",
+    "range": {
+      "vacation": {
+        "from": "2019-12-18T00:00:00.000Z",
+        "to": "2020-01-06T00:00:00.000Z"
       }
     }
   },
@@ -87,7 +100,20 @@ Date.getTerms(2019);
       },
       "full": {
         "from": "2020-01-19T00:00:00.000Z",
-        "to": "2020-03-15T00:00:00.000Z"
+        "to": "2020-03-14T00:00:00.000Z"
+      }
+    }
+  },
+  {
+    "year": 2020,
+    "academicYear": 2019,
+    "termNumber": 2.5,
+    "term": "EV",
+    "termName": "Easter",
+    "range": {
+      "vacation": {
+        "from": "2020-03-26T00:00:00.000Z",
+        "to": "2020-04-19T00:00:00.000Z"
       }
     }
   },
@@ -104,7 +130,20 @@ Date.getTerms(2019);
       },
       "full": {
         "from": "2020-04-26T00:00:00.000Z",
-        "to": "2020-06-21T00:00:00.000Z"
+        "to": "2020-06-20T00:00:00.000Z"
+      }
+    }
+  },
+  {
+    "year": 2020,
+    "academicYear": 2019,
+    "termNumber": 3.5,
+    "term": "LSV",
+    "termName": "Long Summer",
+    "range": {
+      "vacation": {
+        "from": "2020-07-07T00:00:00.000Z",
+        "to": "2020-09-30T00:00:00.000Z"
       }
     }
   }
@@ -182,24 +221,25 @@ Using your own date/term format patterns using 'date.format()':
 %M - month of the year, not zero padded e.g. 1
 %EEEE - full name of the day of the week e.g. Monday
 %EEE - shorter name of the day of the week e.g. Mon
-%ww - day of week number 1-7 (sun-sat)
-%w - day of week number, one digit
+%ww - day of week number 01-07 (sun-sat)
+%w - day of week number, one digit 1-7 (sun-sat)
 %tww - week in term, two digits
 %tw - week in term, one digit
-%tttt - name of the term
-%tt - two letter abbreviation of the term
-%tn - the term number 1,2 or 3
-%t one letter abbreviation of the term
+%tttt - name of the term e.g. Michaelmas, Hilary, Trinity
+%tt - two letter abbreviation of the term e.g. MT, HT, TT
+%tn - the term number 1,2 or 3; or vacation number 1.5, 2.5 or 3.5
+%t one letter abbreviation of the term or vacation e.g. M,H,T,C,E,L
+%vt - The word 'Term' or 'Vacation'
 %dd two digit day of the month e.g. 03
 %d day of the month, not zero padded e.g. 3
-%o the ordinal of the day e.g. st nd rd th
+%o the ordinal of the day of the month e.g. st nd rd th
 ```
 
 ```
 new Date().format("%acsyyyy/%aceyy"); // 2018/19
 new Date().format("0%tnACYR%acsyyyy"); // 02ACYR2018
 new Date().format("%tt%yy"); // MT2015
-new Date().format("%EEEE, Week %tw of %tttt Term %yyyy"); // Monday, Week 1 of Michaelmas Term 2015
+new Date().format("%EEEE, Week %tw of %tttt %vt %yyyy"); // Monday, Week 1 of Michaelmas Term 2015
 new Date().format("%d%o %MMMM %yyyy"); // 19th January 2015
 ```
 
