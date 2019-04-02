@@ -240,6 +240,7 @@ new Date().format("%acsyyyy/%aceyy"); // 2018/19
 new Date().format("0%tnACYR%acsyyyy"); // 02ACYR2018
 new Date().format("%tt%yy"); // MT2015
 new Date().format("%EEEE, Week %tw of %tttt %vt %yyyy"); // Monday, Week 1 of Michaelmas Term 2015
+new Date().format("%EEEE of Week %tw, %tttt %vt"); // Monday of Week 1, Michaelmas Term
 new Date().format("%d%o %MMMM %yyyy"); // 19th January 2015
 ```
 
