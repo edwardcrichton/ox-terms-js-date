@@ -213,6 +213,10 @@ Using your own date/term format patterns using 'date.format()':
 %acsyy - last two digits of the academic year start
 %aceyyyy - academic year end
 %aceyy - last two digits of the academic year end
+%ruacsyyyy - 'Running up to' academic year start - 
+%ruacsyy - last two digits of the running up to academic year start
+%ruaceyyyy - 'Running up to' academic year end
+%ruaceyy - last two digits of the running up to academic year end
 %yyyy - full year
 %yy - last two digits of the year
 %MMMM - full name of the month e.g. January
@@ -225,8 +229,8 @@ Using your own date/term format patterns using 'date.format()':
 %w - day of week number, one digit 1-7 (sun-sat)
 %tww - week in term, two digits
 %tw - week in term, one digit
-%tttt - name of the term e.g. Michaelmas, Hilary, Trinity
-%tt - two letter abbreviation of the term e.g. MT, HT, TT
+%tttt - name of the term e.g. Michaelmas, Hilary, Trinity, Christmas, Easter, Long Summer
+%tt - two letter abbreviation of the term e.g. MT, HT, TT, CV, EV, LV
 %tn - the term number 1,2 or 3; or vacation number 1.5, 2.5 or 3.5
 %t one letter abbreviation of the term or vacation e.g. M,H,T,C,E,L
 %vt - The word 'Term' or 'Vacation'
@@ -237,6 +241,7 @@ Using your own date/term format patterns using 'date.format()':
 
 ```
 new Date().format("%acsyyyy/%aceyy"); // 2018/19
+new Date().format("%ruacsyyyy"); // Same as %acsyyyy until Trinity Term has ended, when it reports the up coming academic year
 new Date().format("0%tnACYR%acsyyyy"); // 02ACYR2018
 new Date().format("%tt%yy"); // MT2015
 new Date().format("%EEEE, Week %tw of %tttt %vt %yyyy"); // Monday, Week 1 of Michaelmas Term 2015
