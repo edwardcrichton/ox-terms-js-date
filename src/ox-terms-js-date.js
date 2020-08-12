@@ -3,12 +3,6 @@
 /*
 Author: Edward Crichton 
 Extends Date to handle Oxford term dates.
-
-Can be used to:
-
-Calculate the first day of a full term given a year.
-Convert between Oxford term dates and calendar dates and back.
-Get a formatted string of a term.
 */
 
 /* Utility functions */
@@ -23,14 +17,17 @@ Date.getLastDayOfMonth = function (date)
 	return new Date(date.getFullYear(), date.getMonth() + 1, 0);
 };
 
-Date.isLeapYear=function(date)
+Date.isLeapYear = function (date)
 {
-	if(!date){date=new Date();}
-	
-	var year=date.getFullYear();
-	
-	var feb=new Date(Date.UTC(year,1,1,0,0,0,0));
-	return (Date.getDaysInMonth(feb) > 28);
+	if (!date)
+	{
+		date = new Date();
+	}
+
+	var year = date.getFullYear();
+
+	var feb = new Date(Date.UTC(year, 1, 1, 0, 0, 0, 0));
+	return Date.getDaysInMonth(feb) > 28;
 };
 
 Date.easter = function (Y)
@@ -81,28 +78,28 @@ Date.DATE_ADD = function (date, interval, unit)
 	switch (unit.toUpperCase())
 	{
 		case "MILLISECOND":
-			cloneDate.setMilliseconds(cloneDate.getMilliseconds() + interval);
+			cloneDate.setUTCMilliseconds(cloneDate.getUTCMilliseconds() + interval);
 			break;
 		case "SECOND":
-			cloneDate.setSeconds(cloneDate.getSeconds() + interval);
+			cloneDate.setUTCSeconds(cloneDate.getUTCSeconds() + interval);
 			break;
 		case "MINUTE":
-			cloneDate.setMinutes(cloneDate.getMinutes() + interval);
+			cloneDate.setUTCMinutes(cloneDate.getUTCMinutes() + interval);
 			break;
 		case "HOUR":
-			cloneDate.setHours(cloneDate.getHours() + interval);
+			cloneDate.setUTCHours(cloneDate.getUTCHours() + interval);
 			break;
 		case "DAY":
-			cloneDate.setDate(cloneDate.getDate() + interval);
+			cloneDate.setUTCDate(cloneDate.getUTCDate() + interval);
 			break;
 		case "WEEK":
-			cloneDate.setDate(cloneDate.getDate() + interval * 7);
+			cloneDate.setUTCDate(cloneDate.getUTCDate() + interval * 7);
 			break;
 		case "MONTH":
-			cloneDate.setMonth(cloneDate.getMonth() + interval);
+			cloneDate.setUTCMonth(cloneDate.getUTCMonth() + interval);
 			break;
 		case "YEAR":
-			cloneDate.setFullYear(cloneDate.getFullYear() + interval);
+			cloneDate.setUTCFullYear(cloneDate.getUTCFullYear() + interval);
 			break;
 		default:
 			throw "Unknown unit: " + unit;
@@ -283,23 +280,22 @@ Date.getAcademicYear = function (date)
 
 /* returns an array of terms as json objects for a given academic year */
 
-Date.getTerms=function(academicYear)
+Date.getTerms = function (academicYear)
 {
-	if(!academicYear)
+	if (!academicYear)
 	{
-		academicYear=Date.getAcademicYear(new Date());
+		academicYear = Date.getAcademicYear(new Date());
 	}
-	
-	var terms=[];
-	
-	
+
+	var terms = [];
+
 	terms.push(Date.getMichaelmasTermObject(academicYear));
 	terms.push(Date.getChristmasVacationObject(academicYear));
-	terms.push(Date.getHilaryTermObject(academicYear+1));
-	terms.push(Date.getEasterVacationObject(academicYear+1));
-	terms.push(Date.getTrinityTermObject(academicYear+1));
-	terms.push(Date.getLongSummerVacationObject(academicYear+1));
-	
+	terms.push(Date.getHilaryTermObject(academicYear + 1));
+	terms.push(Date.getEasterVacationObject(academicYear + 1));
+	terms.push(Date.getTrinityTermObject(academicYear + 1));
+	terms.push(Date.getLongSummerVacationObject(academicYear + 1));
+
 	return terms;
 };
 
@@ -322,7 +318,8 @@ Date.getHolidays = function (year)
 	{
 		newYear = new Date(Date.UTC(year + 1, 0, 2, 0, 0, 0, 0));
 	}
-	else if (yearEnd.DAYOFWEEK() === 7)
+	else
+	if (yearEnd.DAYOFWEEK() === 7)
 	{
 		newYear = new Date(Date.UTC(year + 1, 0, 3, 0, 0, 0, 0));
 	}
@@ -437,212 +434,214 @@ Date.getWeekends = function (year)
 	e.g. you can get Thursday of week 0 Michaelmas term with: SELECT getDateForTermWeekDay(2012,'MT',0,5);
 */
 
-Date.getDateForTermWeekDay=function(year, term ,weekInTerm ,dayOfWeek)
+Date.getDateForTermWeekDay = function (year, term, weekInTerm, dayOfWeek)
 {
 	var termStart;
-	if
-	(
-		term!=='MT' && term!=='HT' && term !=='TT' &&
-		term!=='CV' && term!=='EV' && term !=='LSV'
-	)
+	if (term !== 'MT' && term !== 'HT' && term !== 'TT' && term !== 'CV' && term !== 'EV' && term !== 'LSV')
 	{
 		throw "The term parameter must be one of: MT, HT or TT for terms; or CV, EV or LSV for vacations";
 	}
-	
-	switch(term)
+
+	switch (term)
 	{
 		case 'MT':
-		termStart=Date.michaelmas(year);
-		break;
+			termStart = Date.michaelmas(year);
+			break;
 		case 'HT':
-		termStart=Date.hilary(year);
-		break;
+			termStart = Date.hilary(year);
+			break;
 		case 'TT':
-		termStart=Date.trinity(year);
-		break;
+			termStart = Date.trinity(year);
+			break;
 		case 'CV':
-		termStart=Date.DATE_ADD(Date.michaelmas_end(year),1,"DAY");
-		break;
+			termStart = Date.DATE_ADD(Date.michaelmas_end(year), 1, "DAY");
+			break;
 		case 'EV':
-		termStart=Date.DATE_ADD(Date.hilary_end(year),1,"DAY");
-		break;
+			termStart = Date.DATE_ADD(Date.hilary_end(year), 1, "DAY");
+			break;
 		case 'LSV':
-		termStart=Date.DATE_ADD(Date.trinity_end(year),1,"DAY");
-		break;
+			termStart = Date.DATE_ADD(Date.trinity_end(year), 1, "DAY");
+			break;
 	}
-	
-	return Date.DATE_ADD(Date.DATE_ADD(termStart, (weekInTerm-1), "WEEK"), (dayOfWeek-1), "DAY");
+
+	return Date.DATE_ADD(Date.DATE_ADD(termStart, weekInTerm - 1, "WEEK"), dayOfWeek - 1, "DAY");
 };
 
 /* returns the date for a term object. */
-Date.getDateForTermObject=function(termObject)
+Date.getDateForTermObject = function (termObject)
 {
-	if(!termObject){return null;}
-	
-	if(termObject.date){return termObject.date;}
-	
-	if(termObject.year === null || termObject.year === undefined){throw "Missing year";}
-	if(termObject.term === null || termObject.term === undefined){throw "Missing term";}
-	
-	var date=Date.getDateForTermWeekDay
-	(
-		termObject.year,
-		termObject.term,
-		(termObject.weekInTerm === null || termObject.weekInTerm === undefined)?1:termObject.weekInTerm,
-		(termObject.dayOfWeek === null || termObject.dayOfWeek === undefined)?1:termObject.dayOfWeek
-	);
-	
+	if (!termObject)
+	{
+		return null;
+	}
+
+	if (termObject.date)
+	{
+		return termObject.date;
+	}
+
+	if (termObject.year === null || termObject.year === undefined)
+	{
+		throw "Missing year";
+	}
+	if (termObject.term === null || termObject.term === undefined)
+	{
+		throw "Missing term";
+	}
+
+	var date = Date.getDateForTermWeekDay(termObject.year, termObject.term, termObject.weekInTerm === null || termObject.weekInTerm === undefined ? 1 : termObject.weekInTerm, termObject.dayOfWeek === null || termObject.dayOfWeek === undefined ? 1 : termObject.dayOfWeek);
+
 	return date;
 };
 
-Date.getMichaelmasTermObject=function(year)
+Date.getMichaelmasTermObject = function (year)
 {
-	var term='MT';
-	var termName='Michaelmas';
-	var termNumber=1;
-	var termFrom=Date.michaelmas_start(year);
-	var termTo=Date.michaelmas_end(year);
-	var fullTermFrom=Date.michaelmas(year);
-	var fullTermTo=Date.DATE_SUB(Date.DATE_ADD(fullTermFrom,8,"WEEK"),1,"DAY");
-	var academicYear=Date.getAcademicYear(fullTermFrom);
-	
-	var termObject=
+	var term = 'MT';
+	var termName = 'Michaelmas';
+	var termNumber = 1;
+	var termFrom = Date.michaelmas_start(year);
+	var termTo = Date.michaelmas_end(year);
+	var fullTermFrom = Date.michaelmas(year);
+	var fullTermTo = Date.DATE_SUB(Date.DATE_ADD(fullTermFrom, 8, "WEEK"), 1, "DAY");
+	var academicYear = Date.getAcademicYear(fullTermFrom);
+
+	var termObject =
 	{
 		"year": year,
 		"academicYear": academicYear,
-		"termNumber":termNumber,
+		"termNumber": termNumber,
 		"term": term,
 		"termName": termName,
 		"range":
 		{
-			"term":{"from":termFrom,"to":termTo},
-			"full":{"from":fullTermFrom,"to":fullTermTo}
+			"term": { "from": termFrom, "to": termTo },
+			"full": { "from": fullTermFrom, "to": fullTermTo }
 		}
 	};
 	return termObject;
 };
 
-Date.getHilaryTermObject=function(year)
+Date.getHilaryTermObject = function (year)
 {
-	var term='HT';
-	var termName='Hilary';
-	var termNumber=2;
-	var termFrom=Date.hilary_start(year);
-	var termTo=Date.hilary_end(year);
-	var fullTermFrom=Date.hilary(year);
-	var fullTermTo=Date.DATE_SUB(Date.DATE_ADD(fullTermFrom,8,"WEEK"),1,"DAY");
-	var academicYear=Date.getAcademicYear(fullTermFrom);
-		
-	var termObject=
+	var term = 'HT';
+	var termName = 'Hilary';
+	var termNumber = 2;
+	var termFrom = Date.hilary_start(year);
+	var termTo = Date.hilary_end(year);
+	var fullTermFrom = Date.hilary(year);
+	var fullTermTo = Date.DATE_SUB(Date.DATE_ADD(fullTermFrom, 8, "WEEK"), 1, "DAY");
+	var academicYear = Date.getAcademicYear(fullTermFrom);
+
+	var termObject =
 	{
 		"year": year,
 		"academicYear": academicYear,
-		"termNumber":termNumber,
+		"termNumber": termNumber,
 		"term": term,
 		"termName": termName,
 		"range":
 		{
-			"term":{"from":termFrom,"to":termTo},
-			"full":{"from":fullTermFrom,"to":fullTermTo}
+			"term": { "from": termFrom, "to": termTo },
+			"full": { "from": fullTermFrom, "to": fullTermTo }
 		}
 	};
 	return termObject;
 };
 
-Date.getTrinityTermObject=function(year)
+Date.getTrinityTermObject = function (year)
 {
-	var term='TT';
-	var termName='Trinity';
-	var termNumber=3;
-	var termFrom=Date.trinity_start(year);
-	var termTo=Date.trinity_end(year);
-	var fullTermFrom=Date.trinity(year);
-	var fullTermTo=Date.DATE_SUB(Date.DATE_ADD(fullTermFrom,8,"WEEK"),1,"DAY");
-	var academicYear=Date.getAcademicYear(fullTermFrom);
-	
-	var termObject=
+	var term = 'TT';
+	var termName = 'Trinity';
+	var termNumber = 3;
+	var termFrom = Date.trinity_start(year);
+	var termTo = Date.trinity_end(year);
+	var fullTermFrom = Date.trinity(year);
+	var fullTermTo = Date.DATE_SUB(Date.DATE_ADD(fullTermFrom, 8, "WEEK"), 1, "DAY");
+	var academicYear = Date.getAcademicYear(fullTermFrom);
+
+	var termObject =
 	{
 		"year": year,
 		"academicYear": academicYear,
-		"termNumber":termNumber,
+		"termNumber": termNumber,
 		"term": term,
 		"termName": termName,
 		"range":
 		{
-			"term":{"from":termFrom,"to":termTo},
-			"full":{"from":fullTermFrom,"to":fullTermTo}
+			"term": { "from": termFrom, "to": termTo },
+			"full": { "from": fullTermFrom, "to": fullTermTo }
 		}
 	};
 	return termObject;
 };
 
-Date.getChristmasVacationObject=function(year)
+Date.getChristmasVacationObject = function (year)
 {
-	var term='CV';
-	var termName='Christmas';
-	var termNumber=1.5;
-	var termFrom=Date.DATE_ADD(Date.michaelmas_end(year),1,"DAY");
-	var termTo=Date.DATE_SUB(Date.hilary_start(year+1),1,"DAY");
-	var academicYear=Date.getAcademicYear(termFrom);
-	
-	var termObject=
+	var term = 'CV';
+	var termName = 'Christmas';
+	var termNumber = 1.5;
+	var termFrom = Date.DATE_ADD(Date.michaelmas_end(year), 1, "DAY");
+	var termTo = Date.DATE_SUB(Date.hilary_start(year + 1), 1, "DAY");
+	var academicYear = Date.getAcademicYear(termFrom);
+
+	var termObject =
 	{
 		"year": year,
 		"academicYear": academicYear,
-		"termNumber":termNumber,
+		"termNumber": termNumber,
 		"term": term,
 		"termName": termName,
 		"range":
 		{
-			"vacation":{"from":termFrom,"to":termTo}
+			"vacation": { "from": termFrom, "to": termTo }
 		}
 	};
 	return termObject;
 };
 
-Date.getEasterVacationObject=function(year)
+Date.getEasterVacationObject = function (year)
 {
-	var term='EV';
-	var termName='Easter';
-	var termNumber=2.5;
-	var termFrom=Date.DATE_ADD(Date.hilary_end(year),1,"DAY");
-	var termTo=Date.DATE_SUB(Date.trinity_start(year),1,"DAY");
-	var academicYear=Date.getAcademicYear(termFrom);
-	
-	var termObject=
+	var term = 'EV';
+	var termName = 'Easter';
+	var termNumber = 2.5;
+	var termFrom = Date.DATE_ADD(Date.hilary_end(year), 1, "DAY");
+	var termTo = Date.DATE_SUB(Date.trinity_start(year), 1, "DAY");
+	var academicYear = Date.getAcademicYear(termFrom);
+
+	var termObject =
 	{
 		"year": year,
 		"academicYear": academicYear,
-		"termNumber":termNumber,
+		"termNumber": termNumber,
 		"term": term,
 		"termName": termName,
 		"range":
 		{
-			"vacation":{"from":termFrom,"to":termTo}
+			"vacation": { "from": termFrom, "to": termTo }
 		}
 	};
 	return termObject;
 };
 
-Date.getLongSummerVacationObject=function(year)
+Date.getLongSummerVacationObject = function (year)
 {
-	var term='LSV';
-	var termName='Long Summer';
-	var termNumber=3.5;
-	var termFrom=Date.DATE_ADD(Date.trinity_end(year),1,"DAY");
-	var termTo=Date.DATE_SUB(Date.michaelmas_start(year),1,"DAY");
-	var academicYear=Date.getAcademicYear(termFrom);
-	
-	var termObject=
+	var term = 'LSV';
+	var termName = 'Long Summer';
+	var termNumber = 3.5;
+	var termFrom = Date.DATE_ADD(Date.trinity_end(year), 1, "DAY");
+	var termTo = Date.DATE_SUB(Date.michaelmas_start(year), 1, "DAY");
+	var academicYear = Date.getAcademicYear(termFrom);
+
+	var termObject =
 	{
 		"year": year,
 		"academicYear": academicYear,
-		"termNumber":termNumber,
+		"termNumber": termNumber,
 		"term": term,
 		"termName": termName,
 		"range":
 		{
-			"vacation":{"from":termFrom,"to":termTo}
+			"vacation": { "from": termFrom, "to": termTo }
 		}
 	};
 	return termObject;
@@ -650,131 +649,133 @@ Date.getLongSummerVacationObject=function(year)
 
 /*
 	returns an object representing a term given a date. Week starts from week '-1' onwards
-	e.g. getTermWeekDayForDate(new Date(2012,9,4,0,0,0,0));
+	e.g. getTermObjectForDate(new Date(2012,9,4,0,0,0,0));
 */
 
-Date.getTermObjectForDate=function(date_in)
+Date.getTermObjectForDate = function (date_in)
 {
 	var Y;
-    var MT,MT_end;
-    var HT,HT_end;
-    var TT,TT_end;
-   
-    var relative;
-    var WEEK;
-	
+	var MT, MT_end;
+	var HT, HT_end;
+	var TT, TT_end;
+
+	var relative;
+	var WEEK;
+
 	var termObject;
-	
-	if(date_in.getUTCHours()!==0 && date_in.getHours()===0)
+
+	if (date_in.getUTCHours() !== 0 && date_in.getHours() === 0)
 	{
 		// Daylight savings correction
-		date_in=new Date(date_in.getTime());
-		
+		date_in = new Date(date_in.getTime());
+
 		date_in.setUTCHours(0);
-		date_in.setUTCDate( date_in.getUTCDate() + 1 );
+		date_in.setUTCDate(date_in.getUTCDate() + 1);
 	}
-	
-	Y=date_in.getFullYear();
-    
-	MT=Date.michaelmas(Y);MT_end=Date.michaelmas_end(Y);
-	HT=Date.hilary(Y);HT_end=Date.hilary_end(Y);
-	TT=Date.trinity(Y);TT_end=Date.trinity_end(Y);
-	
-	
-	if(date_in.getTime() > MT_end.getTime())
+
+	Y = date_in.getFullYear();
+
+	MT = Date.michaelmas(Y);MT_end = Date.michaelmas_end(Y);
+	HT = Date.hilary(Y);HT_end = Date.hilary_end(Y);
+	TT = Date.trinity(Y);TT_end = Date.trinity_end(Y);
+
+	if (date_in.getTime() > MT_end.getTime())
 	{
 		// Christmas vacation
-		termObject=Date.getChristmasVacationObject(Y);
-		relative=Date.DATE_ADD(MT_end,1,"DAY");
+		termObject = Date.getChristmasVacationObject(Y);
+		relative = Date.DATE_ADD(MT_end, 1, "DAY");
 	}
 	else
-	if(date_in.getTime() >= Date.DATE_SUB(MT,2,"WEEK").getTime())
-    {
-		termObject=Date.getMichaelmasTermObject(Y);
-		relative=MT;
-    }
+	if (date_in.getTime() >= Date.DATE_SUB(MT, 2, "WEEK").getTime())
+	{
+		termObject = Date.getMichaelmasTermObject(Y);
+		relative = MT;
+	}
 	else
-	if(date_in.getTime() > TT_end.getTime())
+	if (date_in.getTime() > TT_end.getTime())
 	{
 		// Long summer vacation
-		termObject=Date.getLongSummerVacationObject(Y);
-		relative=Date.DATE_ADD(TT_end,1,"DAY");
+		termObject = Date.getLongSummerVacationObject(Y);
+		relative = Date.DATE_ADD(TT_end, 1, "DAY");
 	}
 	else
-	if(date_in.getTime() >= Date.DATE_SUB(TT,2,"WEEK").getTime())
+	if (date_in.getTime() >= Date.DATE_SUB(TT, 2, "WEEK").getTime())
 	{
-		termObject=Date.getTrinityTermObject(Y);
-		relative=TT;
+		termObject = Date.getTrinityTermObject(Y);
+		relative = TT;
 	}
 	else
-	if(date_in.getTime() > HT_end.getTime())
+	if (date_in.getTime() > HT_end.getTime())
 	{
 		// Easter vacation
-		termObject=Date.getEasterVacationObject(Y);
-		relative=Date.DATE_ADD(HT_end,1,"DAY");
+		termObject = Date.getEasterVacationObject(Y);
+		relative = Date.DATE_ADD(HT_end, 1, "DAY");
 	}
 	else
-	if(date_in.getTime() >= Date.DATE_SUB(HT,2,"WEEK").getTime())
+	if (date_in.getTime() >= Date.DATE_SUB(HT, 2, "WEEK").getTime())
 	{
-		termObject=Date.getHilaryTermObject(Y);
-		relative=HT;
+		termObject = Date.getHilaryTermObject(Y);
+		relative = HT;
 	}
 	else
 	{
 		// Previous Christmas vacation
-		termObject=Date.getChristmasVacationObject(Y-1);
-		relative=Date.DATE_ADD(Date.michaelmas_end(Y-1),1,"DAY");
+		termObject = Date.getChristmasVacationObject(Y - 1);
+		relative = Date.DATE_ADD(Date.michaelmas_end(Y - 1), 1, "DAY");
 	}
-	
-	if(relative)
+
+	if (relative)
 	{
-    	WEEK=Math.floor((((Date.DATEDIFF(date_in,Date.DATE_SUB(relative,2,"WEEK")))-14)/7))+1;
+		WEEK = Math.floor((Date.DATEDIFF(date_in, Date.DATE_SUB(relative, 2, "WEEK")) - 14) / 7) + 1;
 	}
 	else
 	{
-		WEEK="";
+		WEEK = "";
 	}
-	
-	termObject.weekInTerm=WEEK;
-	termObject.dayOfWeek=Date.DAYOFWEEK(date_in);
-	termObject.date=new Date(date_in.getTime());
-	
+
+	termObject.weekInTerm = WEEK;
+	termObject.dayOfWeek = Date.DAYOFWEEK(date_in);
+	termObject.date = new Date(date_in.getTime());
+
 	return termObject;
 };
 
-Date.format=
-Date.toTermString=function(date,format)
+Date.format = Date.toTermString = function (date, format)
 {
-	if(!format){throw "Missing date format";}
-	
-	var termObject;
-	
-	if
-		(
-		format.indexOf('%ac') ||
-		format.indexOf('%w') ||
-		format.indexOf('%t') ||
-		format.indexOf('%vt')
-		)
+	if (!format)
 	{
-		termObject=Date.getTermObjectForDate(date);
+		throw "Missing date format";
 	}
-	
-	var pad=function(str)
+
+	var termObject;
+
+	if (format.indexOf('%ac') || format.indexOf('%ruac') || format.indexOf('%w') || format.indexOf('%t') || format.indexOf('%vt'))
 	{
-		str=''+str;
-		while(str.length<2){str='0'+str;}
+		termObject = Date.getTermObjectForDate(date);
+	}
+
+	var pad = function pad(str)
+	{
+		str = '' + str;
+		while (str.length < 2)
+		{
+			str = '0' + str;
+		}
 		return str;
 	};
-	
-	var dayOfWeekNames=['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-	var monthOfYearNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
-	
+
+	var dayOfWeekNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+	var monthOfYearNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
 	return format
 		.split('%acsyyyy').join(termObject.academicYear)
 		.split('%acsyy').join((termObject.academicYear + '').substring(2))
 		.split('%aceyyyy').join(termObject.academicYear+1)
 		.split('%aceyy').join(((termObject.academicYear+1) + '').substring(2))
+		.split('%ruacsyyyy').join(termObject.termNumber===3.5?termObject.academicYear+1:termObject.academicYear)
+		.split('%ruacsyy').join(((termObject.termNumber===3.5?termObject.academicYear+1:termObject.academicYear) + '').substring(2))
+		.split('%ruaceyyyy').join(termObject.termNumber===3.5?termObject.academicYear+2:termObject.academicYear+1)
+		.split('%ruaceyy').join(((termObject.termNumber===3.5?termObject.academicYear+2:termObject.academicYear+1) + '').substring(2))
 		.split('%yyyy').join(date.getFullYear())
 		.split('%yy').join((date.getFullYear() + '').substring(2))
 		.split('%MMMM').join(monthOfYearNames[date.getMonth()])
@@ -796,61 +797,62 @@ Date.toTermString=function(date,format)
 		.split('%d').join(date.getDate())
 		.split('%o').join("thstndrdthththththththththththththththththstndrdthththththththst".substring(((date.getDate() % 32)*2),((date.getDate() % 32)*2)+2))
 		;
-};
+	};
 
 /* Bind these functions to Date instances */
 
 (
-	function ()
+function()
+{
+	function addPrototype(function_name, func)
 	{
-		function addPrototype(function_name, func)
-		{
-			if (typeof Date.prototype[function_name] === 'undefined')
-			{
-				Date.prototype[function_name] = func;
-			}
-		}
-
-		function addPrototypeAttribute(attribute_name, attribute_value)
-		{
-			if (typeof Date.prototype[attribute_name] === 'undefined')
-			{
-				Date.prototype[attribute_name] = attribute_value;
-			}
-		}
-
-		addPrototype("getDaysInMonth",function(){return Date.getDaysInMonth(this);});
-		addPrototype("getLastDayOfMonth",function(){return Date.getLastDayOfMonth(this);});
-		addPrototype("isLeapYear",function(){return Date.isLeapYear(this);});
-		addPrototype("easter",function(){return Date.easter(this.getFullYear());});
-		addPrototype("DATE_ADD",function(interval,unit){return Date.DATE_ADD(this,interval,unit);});
-		addPrototype("DATE_SUB",function(interval,unit){return Date.DATE_SUB(this,interval,unit);});
-		addPrototype("DATEDIFF",function(date){return Date.DATEDIFF(this,date);});
-		addPrototype("DAYOFWEEK",function(){return Date.DAYOFWEEK(this);});
-		addPrototype("michaelmas",function(){return Date.michaelmas(this.getFullYear());});
-		addPrototype("hilary",function(){return Date.hilary(this.getFullYear());});
-		addPrototype("trinity",function(){return Date.trinity(this.getFullYear());});
-		addPrototype("michaelmas_start",function(){return Date.michaelmas_start(this.getFullYear());});
-		addPrototype("hilary_start",function(){return Date.hilary_start(this.getFullYear());});
-		addPrototype("trinity_start",function(){return Date.trinity_start(this.getFullYear());});
-		addPrototype("michaelmas_end",function(){return Date.michaelmas_end(this.getFullYear());});
-		addPrototype("hilary_end",function(){return Date.hilary_end(this.getFullYear());});
-		addPrototype("trinity_end",function(){return Date.trinity_end(this.getFullYear());});
-		addPrototype("getAcademicYear",function(){return Date.getAcademicYear(this);});
-		addPrototype("getTerms",function(){return Date.getTerms(this.getAcademicYear());});
-		addPrototype("getMichaelmasTermObject",function(){return Date.getMichaelmasTermObject(this.getFullYear());});
-		addPrototype("getHilaryTermObject",function(){return Date.getHilaryTermObject(this.getFullYear());});
-		addPrototype("getTrinityTermObject",function(){return Date.getTrinityTermObject(this.getFullYear());});
-		addPrototype("getChristmasVacationObject",function(){return Date.getChristmasVacationObject(this.getFullYear());});
-		addPrototype("getEasterVacationObject",function(){return Date.getEasterVacationObject(this.getFullYear());});
-		addPrototype("getLongSummerVacationObject",function(){return Date.getLongSummerVacationObject(this.getFullYear());});
-		addPrototype("getTerm",function(){return Date.getTermObjectForDate(this);});
-		addPrototypeAttribute("termFormat","%EEEE, Week %tw of %tttt %vt %yyyy");
-		addPrototypeAttribute("dateFormat","%EEE, %dd %MMM %yyyy");
-		addPrototype("toTermString",function(format){return Date.toTermString(this,format || this.termFormat);});
-		addPrototype("toDateString",function(format){return Date.toTermString(this,format || this.dateFormat);});
-		addPrototype("format",function(format){return Date.format(this,format || this.dateFormat);});
-		addPrototype("getHolidays",function(){return Date.getHolidays(this.getFullYear());});
-		addPrototype("getWeekends",function(){return Date.getWeekends(this.getFullYear());});
+		if( typeof Date.prototype[function_name] === 'undefined' ){Date.prototype[function_name] = func;}
 	}
+	
+	function addPrototypeAttribute(attribute_name, attribute_value)
+	{
+		if( typeof Date.prototype[attribute_name] === 'undefined' ){Date.prototype[attribute_name] = attribute_value;}
+	}
+	
+	addPrototype("getDaysInMonth",function(){return Date.getDaysInMonth(this);});
+	addPrototype("getLastDayOfMonth",function(){return Date.getLastDayOfMonth(this);});
+	addPrototype("isLeapYear",function(){return Date.isLeapYear(this);});
+	addPrototype("easter",function(){return Date.easter(this.getFullYear());});
+	
+	addPrototype("DATE_ADD",function(interval,unit){return Date.DATE_ADD(this,interval,unit);});
+	addPrototype("DATE_SUB",function(interval,unit){return Date.DATE_SUB(this,interval,unit);});
+	addPrototype("DATEDIFF",function(date){return Date.DATEDIFF(this,date);});
+	addPrototype("DAYOFWEEK",function(){return Date.DAYOFWEEK(this);});
+	
+	addPrototype("michaelmas",function(){return Date.michaelmas(this.getFullYear());});
+	addPrototype("hilary",function(){return Date.hilary(this.getFullYear());});
+	addPrototype("trinity",function(){return Date.trinity(this.getFullYear());});
+	
+	addPrototype("michaelmas_start",function(){return Date.michaelmas_start(this.getFullYear());});
+	addPrototype("hilary_start",function(){return Date.hilary_start(this.getFullYear());});
+	addPrototype("trinity_start",function(){return Date.trinity_start(this.getFullYear());});
+	
+	addPrototype("michaelmas_end",function(){return Date.michaelmas_end(this.getFullYear());});
+	addPrototype("hilary_end",function(){return Date.hilary_end(this.getFullYear());});
+	addPrototype("trinity_end",function(){return Date.trinity_end(this.getFullYear());});
+	
+	addPrototype("getAcademicYear",function(){return Date.getAcademicYear(this);});
+	addPrototype("getTerms",function(){return Date.getTerms(this.getAcademicYear());});
+	
+	addPrototype("getMichaelmasTermObject",function(){return Date.getMichaelmasTermObject(this.getFullYear());});
+	addPrototype("getHilaryTermObject",function(){return Date.getHilaryTermObject(this.getFullYear());});
+	addPrototype("getTrinityTermObject",function(){return Date.getTrinityTermObject(this.getFullYear());});
+	addPrototype("getChristmasVacationObject",function(){return Date.getChristmasVacationObject(this.getFullYear());});
+	addPrototype("getEasterVacationObject",function(){return Date.getEasterVacationObject(this.getFullYear());});
+	addPrototype("getLongSummerVacationObject",function(){return Date.getLongSummerVacationObject(this.getFullYear());});
+	
+	addPrototype("getTerm",function(){return Date.getTermObjectForDate(this);});
+	addPrototypeAttribute("termFormat","%EEEE, Week %tw of %tttt %vt %yyyy");
+	addPrototypeAttribute("dateFormat","%EEE, %dd %MMM %yyyy");
+	addPrototype("toTermString",function(format){return Date.toTermString(this,format || this.termFormat);});
+	addPrototype("toDateString",function(format){return Date.toTermString(this,format || this.dateFormat);});
+	addPrototype("format",function(format){return Date.format(this,format || this.dateFormat);});
+	addPrototype("getHolidays",function(){return Date.getHolidays(this.getFullYear());});
+	addPrototype("getWeekends",function(){return Date.getWeekends(this.getFullYear());});
+}
 )();
