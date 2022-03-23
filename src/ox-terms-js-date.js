@@ -32,6 +32,7 @@ Date.isLeapYear = function (date)
 
 Date.easter = function (Y)
 {
+	Y = Number(Y);
 	var D;
 	var E;
 	var Q;
@@ -73,6 +74,8 @@ Date.DATE_ADD = function (date, interval, unit)
 		throw "Missing unit";
 	}
 
+	interval = Number(interval);
+
 	var cloneDate = new Date(date.getTime());
 
 	switch (unit.toUpperCase())
@@ -110,6 +113,7 @@ Date.DATE_ADD = function (date, interval, unit)
 
 Date.DATE_SUB = function (date, interval, unit)
 {
+	interval = Number(interval);
 	return Date.DATE_ADD(date, -interval, unit);
 };
 
@@ -129,6 +133,8 @@ Date.DAYOFWEEK = function (date)
 
 Date.michaelmas = function (Y)
 {
+	Y = Number(Y);
+
 	// Full term is the first Sunday after the first Monday
 	// find the first Monday in October and add 6 days.
 	var oct1 = new Date(Date.UTC(Y, 9, 1, 0, 0, 0, 0));
@@ -145,6 +151,7 @@ Date.michaelmas = function (Y)
 
 Date.hilary = function (Y)
 {
+	Y = Number(Y);
 	// Full term is the first Sunday after the first Monday after 7th January
 
 	var jan7 = new Date(Date.UTC(Y, 0, 7, 0, 0, 0, 0));
@@ -161,6 +168,7 @@ Date.hilary = function (Y)
 
 Date.trinity = function (Y)
 {
+	Y = Number(Y);
 	// Full term is the first Sunday after the latest out of (20th April or Wednesday after Easter)
 
 	var latest;
@@ -190,6 +198,7 @@ Date.trinity = function (Y)
 
 Date.michaelmas_start = function (Y)
 {
+	Y = Number(Y);
 	// Michaelmas shall begin on and include 1 October
 	return new Date(Date.UTC(Y, 9, 1, 0, 0, 0, 0));
 };
@@ -202,6 +211,7 @@ Date.hilary_start = function (Y)
 
 Date.trinity_start = function (Y)
 {
+	Y = Number(Y);
 	// Trinity shall begin on and include 20 April or the Wednesday after Easter, whichever is the later.
 
 	var latest;
@@ -224,12 +234,14 @@ Date.trinity_start = function (Y)
 
 Date.michaelmas_end = function (Y)
 {
+	Y = Number(Y);
 	// Michaelmas shall end on and include 17 December.
 	return new Date(Date.UTC(Y, 11, 17, 0, 0, 0, 0));
 };
 
 Date.hilary_end = function (Y)
 {
+	Y = Number(Y);
 	// Hilary shall end on and include 25 March or the Saturday before Palm Sunday, whichever is the earliest.
 
 	var satBeforePalm;
@@ -252,6 +264,7 @@ Date.hilary_end = function (Y)
 
 Date.trinity_end = function (Y)
 {
+	Y = Number(Y);
 	// Trinity shall end on and include 6 July.
 	return new Date(Date.UTC(Y, 6, 6, 0, 0, 0, 0));
 };
@@ -287,6 +300,8 @@ Date.getTerms = function (academicYear)
 		academicYear = Date.getAcademicYear(new Date());
 	}
 
+	academicYear = Number(academicYear);
+
 	var terms = [];
 
 	terms.push(Date.getMichaelmasTermObject(academicYear));
@@ -306,6 +321,8 @@ Date.getHolidays = function (year)
 	{
 		year = new Date().getFullYear();
 	}
+
+	year = Number(year);
 
 	var holidays = [];
 
@@ -405,6 +422,8 @@ Date.getWeekends = function (year)
 		year = new Date().getFullYear();
 	}
 
+	year = Number(year);
+
 	var weekends = [];
 
 	// find the first Sunday of the year
@@ -436,6 +455,10 @@ Date.getWeekends = function (year)
 
 Date.getDateForTermWeekDay = function (year, term, weekInTerm, dayOfWeek)
 {
+	year = Number(year);
+	weekInTerm = Number(weekInTerm);
+	dayOfWeek = Number(dayOfWeek);
+
 	var termStart;
 	if (term !== 'MT' && term !== 'HT' && term !== 'TT' && term !== 'CV' && term !== 'EV' && term !== 'LSV')
 	{
@@ -496,6 +519,7 @@ Date.getDateForTermObject = function (termObject)
 
 Date.getMichaelmasTermObject = function (year)
 {
+	year = Number(year);
 	var term = 'MT';
 	var termName = 'Michaelmas';
 	var termNumber = 1;
@@ -523,6 +547,7 @@ Date.getMichaelmasTermObject = function (year)
 
 Date.getHilaryTermObject = function (year)
 {
+	year = Number(year);
 	var term = 'HT';
 	var termName = 'Hilary';
 	var termNumber = 2;
@@ -550,6 +575,7 @@ Date.getHilaryTermObject = function (year)
 
 Date.getTrinityTermObject = function (year)
 {
+	year = Number(year);
 	var term = 'TT';
 	var termName = 'Trinity';
 	var termNumber = 3;
@@ -577,6 +603,7 @@ Date.getTrinityTermObject = function (year)
 
 Date.getChristmasVacationObject = function (year)
 {
+	year = Number(year);
 	var term = 'CV';
 	var termName = 'Christmas';
 	var termNumber = 1.5;
@@ -601,6 +628,7 @@ Date.getChristmasVacationObject = function (year)
 
 Date.getEasterVacationObject = function (year)
 {
+	year = Number(year);
 	var term = 'EV';
 	var termName = 'Easter';
 	var termNumber = 2.5;
@@ -625,6 +653,7 @@ Date.getEasterVacationObject = function (year)
 
 Date.getLongSummerVacationObject = function (year)
 {
+	year = Number(year);
 	var term = 'LSV';
 	var termName = 'Long Summer';
 	var termNumber = 3.5;
