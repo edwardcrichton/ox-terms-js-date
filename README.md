@@ -338,3 +338,82 @@ Date.DAYOFWEEK(date);
 new Date().DAYOFWEEK();
 new Date().format("%w");
 ```
+
+Dates in web pages
+------------------
+
+Here's an example of using term dates in a web page.
+
+Say that there are recurring deadlines each academic year and these are alwaying given as terms, week of term, and the day of the week. It would be convenient to list these in a web page along with the corresponding dates but without having to edit the page each academic year.
+
+For example for the academic year 2021/2022:
+```
+Monday of Week 7, Hilary Term (28th Feb 2022): registration
+Monday of Week 1, Trinity Term (25th Apr 2022): project proposal
+12pm on Monday of Week 4 of Trinity Term (16th May 2022): submission deadline
+Tuesday of Week -5 (minus 5), Michaelmas Term (30th Aug 2022): submission deadline
+```
+
+For each of these term dates, we can use javascript to insert the corresponding date into the page. In the web page's HTML we can give the term date and the date format we want to display. The academic year we are in changes over time, so we use a date pattern to describe the academic year.
+
+e.g. Put the recurring term details into ```<span></span>``` elements using attributes for term and date format:
+```
+<h3>Important Deadlines are:</h3>
+ 
+ <dl>
+ 	<dt>All:</dt>
+	<dd>
+	Monday of Week 7, Hilary Term
+	<span x-term="%ruaceyyyy,HT,7,2" x-format="(%d%o %MMM %yyyy)"></span>:
+	your online project registration survey must be completed.
+	</dd>
+	
+	<dt>MSc students:</dt>
+	<dd>
+	Monday of Week 1, Trinity Term
+	<span x-term="%ruaceyyyy,TT,1,2" x-format="(%d%o %MMM %yyyy)"></span>:
+	submission deadline for your project proposal.
+	</dd>
+	
+	<dt>3rd/4th year students:</dt>
+	<dd>
+	12pm on Monday of Week 4 of Trinity Term
+	<span x-term="%ruaceyyyy,TT,4,2" x-format="(%d%o %MMM %yyyy)"></span>:
+	Submission deadline.
+	</dd>
+	
+	<dt>MSc students:</dt>
+	<dd>
+	Tuesday of Week <strong>-</strong>5 (minus 5), Michaelmas Term
+	<span x-term="%ruaceyyyy,MT,-5,3" x-format="(%d%o %MMM %yyyy)"></span>:
+	Submission deadline
+	</dd>
+ </dl>
+
+```
+
+Use jQuery to find all elements with a term description and put the resulting date into that element's text.
+```
+<script type="text/javascript">
+$(document).ready
+(
+	function()
+	{
+		$('*[x-term]').each
+		(
+			function()
+			{
+				var term=$(this).attr("x-term");
+				var termParametersFormatted=new Date().format(term);
+				var params=termParametersFormatted.split(",");
+				var format=$(this).attr("x-format");
+				var formatted=Date.getDateForTermWeekDay(params[0],params[1],params[2],params[3]).format(format);
+				$(this).text(formatted);
+			}
+		);
+	}
+);
+</script>
+```
+
+This works by taking the contents of an x-term attribute and passing it through the date formatter. The date formatter replaces formatting patterns with values. In this example it is replacing the pattern %ruaceyyyy (running up to academic year end) with 2022 during the academic year 2021/2022 for MT,HT,TT and then 2023 following TT. The given pattern for x-term '%ruaceyyyy,HT,7,2' becomes '2022,HT,7,2' meaning Monday Week 7 of HT2022. It converts that to a date, formats it with the pattern given in the attribute x-format and puts the result in the element. After TT or into 2022/2023 the page will display the date for '2023,HT,7,2' and so on.
