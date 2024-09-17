@@ -30,8 +30,9 @@ Date.isLeapYear = function (date)
 	return Date.getDaysInMonth(feb) > 28;
 };
 
-Date.easter = function (Y)
+Date.easter_2099 = function (Y)
 {
+	// Accurate up to 2100
 	Y = Number(Y);
 	var D;
 	var E;
@@ -60,6 +61,29 @@ Date.easter = function (Y)
 	{
 		return new Date(Date.UTC(Y, 3, Q - 31, 0, 0, 0, 0));
 	}
+};
+
+Date.easter = function (Y)
+{
+	// Meeus/Jones/Butcher
+	Y = Number(Y);
+
+	var a = Y % 19;
+	var b = Math.floor(Y / 100);
+	var c = Y % 100;
+	var d = Math.floor(b / 4);
+	var e = b % 4;
+	var f = Math.floor((b + 8) / 25);
+	var g = Math.floor((b - f + 1) / 3);
+	var h = (19 * a + b - d - g + 15) % 30;
+	var i = Math.floor(c / 4);
+	var k = c % 4;
+	var l = (32 + 2 * e + 2 * i - h - k) % 7;
+	var m = Math.floor((a + 11 * h + 22 * l) / 451);
+	var month = Math.floor((h + l - 7 * m + 114) / 31);
+	var day = ((h + l - 7 * m + 114) % 31) + 1;
+	
+	return new Date(Date.UTC(Y, month - 1, day, 0, 0, 0, 0));
 };
 
 Date.DATE_ADD = function (date, interval, unit)
